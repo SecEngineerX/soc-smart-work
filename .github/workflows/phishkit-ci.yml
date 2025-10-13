@@ -1,0 +1,48 @@
+name: PhishKit CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f 5-labs/phishing_analysis/requirements-dev.txt ]; then pip install -r 5-labs/phishing_analysis/requirements-dev.txt || true; fi
+
+      - name: Run detection script smoke test
+        working-directory: 5-labs/phishing_analysis
+        run: |
+          python3 detection_script.py -i sample_email.eml -o ci_analysis.json --md ci_report.md || exit 1
+          test -s ci_analysis.json || (echo "ci_analysis.json missing or empty" && exit 1)
+          python3 - <<'PY'
+import json,sys
+j=json.load(open('ci_analysis.json'))
+required = ['input_file','urls','suspicious_urls','attachments','domains']
+missing = [k for k in required if k not in j]
+if missing:
+    print("Missing keys in JSON:", missing)
+    sys.exit(2)
+print("Smoke test OK — keys present")
+PY
+
+      - name: Upload artifacts (for debugging)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phishkit-ci-debug
+          path: |
+            5-labs/phishing_analysis/ci_analysis.json
+            5-labs/phishing_analysis/ci_report.md

@@ -1,0 +1,24 @@
+From: "Finance Dept" <billing@example.com>
+To: victim@example.com
+Subject: Your Invoice is ready
+Date: Fri, 03 Oct 2025 12:05:00 +0000
+Message-ID: <0987654321@example.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="BOUNDARY"
+
+--BOUNDARY
+Content-Type: text/html; charset="UTF-8"
+
+<p>Hello,</p>
+<p>Your invoice is attached. Please review and pay promptly:</p>
+<a href="hxxp[:]//amaz0n[.]example(dot)com/secure-login">amazon.com</a>
+<p>Invoice attached.</p>
+
+--BOUNDARY
+Content-Type: application/zip; name="invoice.zip"
+Content-Disposition: attachment; filename="invoice.zip"
+Content-Transfer-Encoding: base64
+
+UEsDBBQAAAAIAAeLbVQAAAAAAAAAAAAAAAAJAAQATUVUQS1JTkYv/...
+
+--BOUNDARY--

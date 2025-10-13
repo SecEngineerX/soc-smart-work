@@ -1,0 +1,7 @@
+# requirements-dev.txt — optional extras for full functionality & testing
+tldextract
+urlextract
+beautifulsoup4
+yara-python
+requests
+pytest
